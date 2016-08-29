@@ -1,16 +1,25 @@
+import org.apache.spark.sql.Dataset
 import org.apache.spark.{SparkConf, SparkContext}
 
-object Test {
-  def main(args: Array[String]) {
-    println("Start ")
+object Test extends App {
+  println("Start ")
 
-    val conf = new SparkConf()
-      .setAppName("HW1")
-      .setMaster("local[*]")
-    val sc = new SparkContext(conf)
+  val conf = new SparkConf()
+    .setAppName("HW1")
+  val sc = new SparkContext(conf)
 
-    val count = sc.parallelize(Seq(1, 2, 3, 4)).count()
+  val sqlContext = new org.apache.spark.sql.SQLContext(sc)
 
-    println(count);
-  }
+  import sqlContext.implicits._
+
+  case class Person(age: Int, name:String)
+
+  val df = sqlContext.read.json("file:///home/zinjvi/repo/spark-test/src/main/resources/people.json")
+
+
+  df.explain()
+
+
+  println("Finish ")
+
 }
